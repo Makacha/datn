@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: scrapyd-vol
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 250Mi
+  storageClassName: fast
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scrapyd
+  labels: 
+    app: scrapyd
+spec:
+  clusterIP: None
+  ports:
+  - port: 6800
+  selector:
+    app: scrapyd
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scrapyd
+  labels:
+    app: scrapyd
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: scrapyd
+  template:
+    metadata:
+      labels:
+        app: scrapyd
+    spec:
+      containers:
+      - name: scrapyd
+        image: coverthe/scrapyd:latest
+        ports:
+        - containerPort: 6800
+        env:
+        - name: KAFKA_SERVER
+          value: "kafka:9092"
+        - name: SCRAPYD_SERVER
+          value: "scrapyd:6800"
+        - name: CASSANDRA_HOSTS
+          value: "cassandra"
+        - name: CASSANDRA_KEYSPACE
+          value: stock
+        volumeMounts:
+        - name: scrapyd-data
+          mountPath: /app/dbs
+      volumes:
+      - name: scrapyd-data
+        persistentVolumeClaim:
+          claimName: scrapyd-vol
+      tolerations:
+      - key: ""
+        operator: "Exists"
+        effect: "NoSchedule"
+---
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+  # name: crawler-history
+# spec:
+  # template:
+    # spec:
+      # restartPolicy: Never
+      # containers:
+      # - name: crawler
+        # image: coverthe/crawler:latest
+        # env:
+        # - name: CASSANDRA_HOSTS
+          # value: cassandra
+        # - name: CASSANDRA_PORT 
+          # value: "9042"
+        # - name: CASSANDRA_KEYSPACE
+          # value: stock
+        # - name: KAFKA_SERVER
+          # value: "kafka:9092"
+        # - name: SCRAPYD_SERVER
+          # value: "scrapyd:6800"

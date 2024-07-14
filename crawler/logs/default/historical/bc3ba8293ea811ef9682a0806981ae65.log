@@ -1,0 +1,99 @@
+2024-07-10 17:39:54 [scrapy.utils.log] INFO: Scrapy 2.11.2 started (bot: crawler)
+2024-07-10 17:39:54 [scrapy.utils.log] INFO: Versions: lxml 5.2.2.0, libxml2 2.11.7, cssselect 1.2.0, parsel 1.9.1, w3lib 2.2.0, Twisted 24.3.0, Python 3.11.4 (tags/v3.11.4:d2340ef, Jun  7 2023, 05:45:37) [MSC v.1934 64 bit (AMD64)], pyOpenSSL 24.1.0 (OpenSSL 3.2.2 4 Jun 2024), cryptography 42.0.8, Platform Windows-10-10.0.22631-SP0
+2024-07-10 17:39:54 [scrapy.addons] INFO: Enabled addons:
+[]
+2024-07-10 17:39:54 [asyncio] DEBUG: Using selector: SelectSelector
+2024-07-10 17:39:54 [scrapy.utils.log] DEBUG: Using reactor: twisted.internet.asyncioreactor.AsyncioSelectorReactor
+2024-07-10 17:39:54 [scrapy.utils.log] DEBUG: Using asyncio event loop: asyncio.windows_events._WindowsSelectorEventLoop
+2024-07-10 17:39:54 [scrapy.extensions.telnet] INFO: Telnet Password: 91e30f185f3a4e62
+2024-07-10 17:39:54 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.corestats.CoreStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.logstats.LogStats']
+2024-07-10 17:39:54 [scrapy.crawler] INFO: Overridden settings:
+{'BOT_NAME': 'crawler',
+ 'FEED_EXPORT_ENCODING': 'utf-8',
+ 'LOG_FILE': 'logs\\default\\historical\\bc3ba8293ea811ef9682a0806981ae65.log',
+ 'NEWSPIDER_MODULE': 'crawler.spiders',
+ 'REQUEST_FINGERPRINTER_IMPLEMENTATION': '2.7',
+ 'SPIDER_MODULES': ['crawler.spiders'],
+ 'TWISTED_REACTOR': 'twisted.internet.asyncioreactor.AsyncioSelectorReactor'}
+2024-07-10 17:39:54 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2024-07-10 17:39:54 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2024-07-10 17:39:54 [scrapy.middleware] INFO: Enabled item pipelines:
+['crawler.pipelines.KafkaPipeline']
+2024-07-10 17:39:54 [scrapy.core.engine] INFO: Spider opened
+2024-07-10 17:39:54 [kafka.producer.kafka] DEBUG: Starting the Kafka producer
+2024-07-10 17:39:54 [kafka.metrics.metrics] DEBUG: Added sensor with name connections-closed
+2024-07-10 17:39:54 [kafka.metrics.metrics] DEBUG: Added sensor with name connections-created
+2024-07-10 17:39:54 [kafka.metrics.metrics] DEBUG: Added sensor with name select-time
+2024-07-10 17:39:54 [kafka.metrics.metrics] DEBUG: Added sensor with name io-time
+2024-07-10 17:39:54 [kafka.client] DEBUG: Initiating connection to node bootstrap-0 at 127.1.27.8:9092
+2024-07-10 17:39:54 [kafka.metrics.metrics] DEBUG: Added sensor with name bytes-sent-received
+2024-07-10 17:39:54 [kafka.metrics.metrics] DEBUG: Added sensor with name bytes-sent
+2024-07-10 17:39:54 [kafka.metrics.metrics] DEBUG: Added sensor with name bytes-received
+2024-07-10 17:39:54 [kafka.metrics.metrics] DEBUG: Added sensor with name request-latency
+2024-07-10 17:39:54 [kafka.metrics.metrics] DEBUG: Added sensor with name node-bootstrap-0.bytes-sent
+2024-07-10 17:39:54 [kafka.metrics.metrics] DEBUG: Added sensor with name node-bootstrap-0.bytes-received
+2024-07-10 17:39:54 [kafka.metrics.metrics] DEBUG: Added sensor with name node-bootstrap-0.latency
+2024-07-10 17:39:54 [kafka.conn] DEBUG: <BrokerConnection node_id=bootstrap-0 host=127.1.27.8:9092 <disconnected> [IPv4 None]>: creating new socket
+2024-07-10 17:39:54 [kafka.conn] DEBUG: <BrokerConnection node_id=bootstrap-0 host=127.1.27.8:9092 <disconnected> [IPv4 ('127.1.27.8', 9092)]>: setting socket option (6, 1, 1)
+2024-07-10 17:39:54 [kafka.conn] INFO: <BrokerConnection node_id=bootstrap-0 host=127.1.27.8:9092 <connecting> [IPv4 ('127.1.27.8', 9092)]>: connecting to 127.1.27.8:9092 [('127.1.27.8', 9092) IPv4]
+2024-07-10 17:39:54 [kafka.conn] INFO: Probing node bootstrap-0 broker version
+2024-07-10 17:39:54 [kafka.conn] DEBUG: <BrokerConnection node_id=bootstrap-0 host=127.1.27.8:9092 <connecting> [IPv4 ('127.1.27.8', 9092)]>: established TCP connection
+2024-07-10 17:39:54 [kafka.conn] INFO: <BrokerConnection node_id=bootstrap-0 host=127.1.27.8:9092 <connecting> [IPv4 ('127.1.27.8', 9092)]>: Connection complete.
+2024-07-10 17:39:54 [kafka.client] DEBUG: Node bootstrap-0 connected
+2024-07-10 17:39:54 [kafka.protocol.parser] DEBUG: Sending request ApiVersionRequest_v0()
+2024-07-10 17:39:54 [kafka.conn] DEBUG: <BrokerConnection node_id=bootstrap-0 host=127.1.27.8:9092 <connected> [IPv4 ('127.1.27.8', 9092)]> Request 1: ApiVersionRequest_v0()
+2024-07-10 17:39:54 [kafka.protocol.parser] DEBUG: Sending request MetadataRequest_v0(topics=[])
+2024-07-10 17:39:54 [kafka.conn] DEBUG: <BrokerConnection node_id=bootstrap-0 host=127.1.27.8:9092 <connected> [IPv4 ('127.1.27.8', 9092)]> Request 2: MetadataRequest_v0(topics=[])
+2024-07-10 17:39:54 [kafka.conn] ERROR: <BrokerConnection node_id=bootstrap-0 host=127.1.27.8:9092 <connected> [IPv4 ('127.1.27.8', 9092)]>: socket disconnected
+2024-07-10 17:39:54 [kafka.conn] INFO: <BrokerConnection node_id=bootstrap-0 host=127.1.27.8:9092 <connected> [IPv4 ('127.1.27.8', 9092)]>: Closing connection. KafkaConnectionError: socket disconnected
+2024-07-10 17:39:54 [kafka.conn] INFO: Broker is not v(0, 10) -- it did not recognize ApiVersionRequest_v0
+2024-07-10 17:39:54 [kafka.conn] DEBUG: <BrokerConnection node_id=bootstrap-0 host=127.1.27.8:9092 <disconnected> [IPv4 ('127.1.27.8', 9092)]>: creating new socket
+2024-07-10 17:39:54 [kafka.conn] DEBUG: <BrokerConnection node_id=bootstrap-0 host=127.1.27.8:9092 <disconnected> [IPv4 ('127.1.27.8', 9092)]>: setting socket option (6, 1, 1)
+2024-07-10 17:39:54 [kafka.conn] INFO: <BrokerConnection node_id=bootstrap-0 host=127.1.27.8:9092 <connecting> [IPv4 ('127.1.27.8', 9092)]>: connecting to 127.1.27.8:9092 [('127.1.27.8', 9092) IPv4]
+2024-07-10 17:39:56 [scrapy.core.engine] INFO: Closing spider (shutdown)
+2024-07-10 17:39:56 [scrapy.utils.signal] ERROR: Error caught on signal handler: <bound method CoreStats.spider_closed of <scrapy.extensions.corestats.CoreStats object at 0x0000021CC3D70750>>
+Traceback (most recent call last):
+  File "F:\Workspace\datn2\crawler\.venv\Lib\site-packages\scrapy\crawler.py", line 160, in crawl
+    yield self.engine.open_spider(self.spider, start_requests)
+kafka.errors.NoBrokersAvailable: NoBrokersAvailable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "F:\Workspace\datn2\crawler\.venv\Lib\site-packages\scrapy\utils\defer.py", line 348, in maybeDeferred_coro
+    result = f(*args, **kw)
+  File "F:\Workspace\datn2\crawler\.venv\Lib\site-packages\pydispatch\robustapply.py", line 55, in robustApply
+    return receiver(*arguments, **named)
+  File "F:\Workspace\datn2\crawler\.venv\Lib\site-packages\scrapy\extensions\corestats.py", line 30, in spider_closed
+    elapsed_time = finish_time - self.start_time
+TypeError: unsupported operand type(s) for -: 'datetime.datetime' and 'NoneType'
+2024-07-10 17:39:56 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'log_count/DEBUG': 26, 'log_count/ERROR': 2, 'log_count/INFO': 14}
+2024-07-10 17:39:56 [scrapy.core.engine] INFO: Spider closed (shutdown)
+2024-07-10 17:39:56 [twisted] CRITICAL: Unhandled error in Deferred:
+2024-07-10 17:39:56 [twisted] CRITICAL: 
+Traceback (most recent call last):
+  File "F:\Workspace\datn2\crawler\.venv\Lib\site-packages\twisted\internet\defer.py", line 2003, in _inlineCallbacks
+    result = context.run(gen.send, result)
+  File "F:\Workspace\datn2\crawler\.venv\Lib\site-packages\scrapy\crawler.py", line 160, in crawl
+    yield self.engine.open_spider(self.spider, start_requests)
+kafka.errors.NoBrokersAvailable: NoBrokersAvailable

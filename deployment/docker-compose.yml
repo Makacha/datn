@@ -1,0 +1,145 @@
+version: '3'
+
+networks:
+  datapipeline:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.18.0.0/16"
+
+services:
+  zookeeper:
+    image: zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+    networks:
+      datapipeline:
+        ipv4_address: 172.18.0.2
+  kafka:
+    image: bitnami/kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://172.18.0.3:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://172.18.0.3:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      datapipeline:
+        ipv4_address: 172.18.0.3
+  spark:
+    image: bitnami/spark:latest
+    environment:
+      - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+      - SPARK_USER=spark
+    ports:
+      - '28080:8080'
+    volumes:
+      - type: bind
+        source: ./conf/log4j.properties
+        target: /opt/bitnami/spark/conf/log4j.properties
+      - ./data/spark/.ivy2:/opt/bitnami/spark/.ivy2
+    networks:
+      datapipeline:
+        ipv4_address: 172.18.0.4
+  spark-worker-1:
+    image: bitnami/spark:latest
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark:7077
+      - SPARK_WORKER_MEMORY=2G
+      - SPARK_WORKER_CORES=3
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+      - SPARK_USER=spark
+    networks:
+      datapipeline:
+        ipv4_address: 172.18.0.5
+        
+  cassandra-1:
+    image: cassandra:latest
+    container_name: cassandra-1
+    hostname: cassandra-1
+    ports:
+      - 9042:9042
+    environment:
+      - HEAP_NEWSIZE=128M
+      - MAX_HEAP_SIZE=256M
+      - CASSANDRA_SEEDS=cassandra-1,cassandra-2
+    networks:
+      datapipeline:
+        ipv4_address: 172.18.0.6
+    volumes:
+      - ./data/cassandra-1:/var/lib/cassandra
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "describe keyspaces" ]
+      interval: 5s
+      timeout: 5s
+      retries: 60
+  cassandra-2:
+    image: cassandra:latest
+    container_name: cassandra-2
+    hostname: cassandra-2
+    environment:
+      - HEAP_NEWSIZE=128M
+      - MAX_HEAP_SIZE=256M
+      - CASSANDRA_SEEDS=cassandra-1,cassandra-2
+    networks:
+      datapipeline:
+        ipv4_address: 172.18.0.7
+    volumes:
+      - ./data/cassandra-2:/var/lib/cassandra
+    depends_on:
+      cassandra-1:
+        condition: service_healthy
+    healthcheck:
+        test: ["CMD", "cqlsh", "-e", "describe keyspaces" ]
+        interval: 5s
+        timeout: 5s
+        retries: 60
+  cassandra-3:
+    image: cassandra:latest
+    container_name: cassandra-3
+    hostname: cassandra-3
+    environment:
+      - HEAP_NEWSIZE=128M
+      - MAX_HEAP_SIZE=256M
+      - CASSANDRA_SEEDS=cassandra-1,cassandra-2
+    volumes:
+      - ./data/cassandra-3:/var/lib/cassandra
+    networks:
+      datapipeline:
+        ipv4_address: 172.18.0.8
+    depends_on:
+      cassandra-2:
+        condition: service_healthy
+  spark-worker-2:
+    image: bitnami/spark:latest
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark:7077
+      - SPARK_WORKER_MEMORY=2G
+      - SPARK_WORKER_CORES=3
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+      - SPARK_USER=spark
+    networks:
+      datapipeline:
+        ipv4_address: 172.18.0.9

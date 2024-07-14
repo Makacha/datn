@@ -1,0 +1,125 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: spark-master-claim
+  labels:
+    app: spark
+spec:
+  accessModes: [ "ReadWriteOnce" ]
+  storageClassName: fast
+  resources:
+    requests:
+      storage: 1Gi
+---     
+apiVersion: v1
+kind: Service
+metadata:
+  name: spark-master
+  labels:
+    app: spark
+spec:
+  clusterIP: None
+  ports:
+  - port: 8080
+    name: ui
+  - port: 7077
+    name: spark
+  selector:
+    app: spark
+    role: master
+---     
+apiVersion: v1
+kind: Service
+metadata:
+  name: spark-worker
+  labels:
+    app: spark
+spec:
+  clusterIP: None
+  ports:
+  - port: 8081
+  selector:
+    app: spark
+    role: worker
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: spark-master
+  labels:
+    app: spark
+    role: master
+spec:
+  containers:
+    - name: spark
+      image: bitnami/spark:latest
+      ports:
+        - containerPort: 7077
+          name: spark
+        - containerPort: 8080
+          name: ui
+      env:
+        - name: SPARK_MODE
+          value: master
+        - name: SPARK_RPC_AUTHENTICATION_ENABLED
+          value: "no"
+        - name: SPARK_RPC_ENCRYPTION_ENABLED
+          value: "no"
+        - name: SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED
+          value: "no"
+        - name: SPARK_SSL_ENABLED
+          value: "no"
+        - name: SPARK_USER
+          value: spark
+      volumeMounts:
+        - name: spark-master-data
+          mountPath: /opt/bitnami/spark/conf
+  securityContext:
+    fsGroup: 1001
+  volumes:
+    - name: spark-master-data
+      persistentVolumeClaim:
+        claimName: spark-master-claim
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spark-worker
+  labels:
+    app: spark
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: spark
+      role: worker
+  template:
+    metadata:
+      labels:
+        app: spark
+        role: worker
+    spec:
+      containers:
+      - name: spark
+        image: bitnami/spark:latest
+        ports:
+          - containerPort: 8081
+        env:
+          - name: SPARK_MODE
+            value: worker
+          - name: SPARK_MASTER_URL
+            value: spark://spark-master:7077
+          - name: SPARK_WORKER_MEMORY
+            value: 512M
+          - name: SPARK_WORKER_CORES
+            value: "3"
+          - name: SPARK_RPC_AUTHENTICATION_ENABLED
+            value: "no"
+          - name: SPARK_RPC_ENCRYPTION_ENABLED
+            value: "no"
+          - name: SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED
+            value: "no"
+          - name: SPARK_SSL_ENABLED
+            value: "no"
+          - name: SPARK_USER
+            value: spark

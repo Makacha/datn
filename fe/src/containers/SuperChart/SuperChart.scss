@@ -1,0 +1,35 @@
+.super-chart {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .super-chart-header {
+    display: flex;
+    height: 44px;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: white;
+    margin-bottom: 4px;
+
+    .header-left, .header-right {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+  }
+
+  .chart-legend {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 99;
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .main-chart {
+    position: relative;
+    flex: 1;
+    border-radius: 5px;
+  }
+}
